@@ -1,8 +1,10 @@
 
 using LANOrganizer.Data;
 using LANOrganizer.Endpoints;
+using LANOrganizer.Models;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using LANOrganizer.Data.Services;
 
 namespace LANOrganizer
 {
@@ -21,6 +23,11 @@ namespace LANOrganizer
             builder.Services.AddDbContext<LanorgDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddHttpClient<ISteamGameResponseService, SteamGameResponse>(s =>
+            {
+                s.BaseAddress = new Uri(builder.Configuration["SteamApi:BaseUrl"]);
             });
 
             var app = builder.Build();

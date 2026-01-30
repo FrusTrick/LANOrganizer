@@ -4,6 +4,7 @@
     { 
         public static void RegisterEndpoints(WebApplication app)
         {
+            
 
         }
     }
