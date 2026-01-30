@@ -1,4 +1,5 @@
 ﻿using LANOrganizer.Models;
+using System.Linq.Expressions;
 
 namespace LANOrganizer.Data.Services
 {
@@ -13,16 +14,15 @@ namespace LANOrganizer.Data.Services
 
         public async Task<List<SteamGameResponse>> GetGamesForUserAsync(string steamId)
         {
-            var response = await _httpClient.GetFromJsonAsync<SteamGameResponse>("IPlayerService/GetOwnedGames/v0001/?key=E8D10200DD162E21EED901F4C6AD18EB&include_appinfo=1&steamid=76561198013726976&format=json");
+            var response = await _httpClient.GetFromJsonAsync<SteamGameResponse>($"IPlayerService/GetOwnedGames/v0001/?key=E8D10200DD162E21EED901F4C6AD18EB&include_appinfo=1&steamid={steamId}&format=json");
 
-            if(response == null)
+            if (response != null)
             {
-                return new List<SteamGameResponse>();
+                return new List<SteamGameResponse> { response };
             }
             else
             {
-                return response.
-
+                return new List<SteamGameResponse>();
             }
         }
     }

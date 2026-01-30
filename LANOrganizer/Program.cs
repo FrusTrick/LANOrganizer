@@ -1,10 +1,11 @@
-
 using LANOrganizer.Data;
+using LANOrganizer.Data.Services;
 using LANOrganizer.Endpoints;
 using LANOrganizer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Scalar.AspNetCore;
-using LANOrganizer.Data.Services;
+
 
 namespace LANOrganizer
 {
@@ -25,12 +26,21 @@ namespace LANOrganizer
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddHttpClient<ISteamGameResponseService, SteamGameResponse>(s =>
+
+            builder.Services.AddHttpClient<ISteamGameResponseService, SteamGameResponseService>(s =>
             {
                 s.BaseAddress = new Uri(builder.Configuration["SteamApi:BaseUrl"]);
             });
 
+            builder.Services.AddHttpClient<ISteamUserResponseService, SteamUserResponseService>(s =>
+            {
+                s.BaseAddress = new Uri(builder.Configuration["SteamApi:BaseUrl"]); 
+            });
+
+            builder.Services.AddTransient<LanorgEndpoints>();
+
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -47,7 +57,9 @@ namespace LANOrganizer
 
             app.UseAuthorization();
 
-           LanorgEndpoints.RegisterEndpoints(app);
+            
+            var lanorgEndpoints = app.Services.GetRequiredService<LanorgEndpoints>();
+            lanorgEndpoints.RegisterEndpoints(app);
 
             app.Run();
         }
