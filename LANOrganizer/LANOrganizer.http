@@ -1,0 +1,6 @@
+@LANOrganizer_HostAddress = http://localhost:5134
+
+GET {{LANOrganizer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
