@@ -1,4 +1,7 @@
 
+using LANOrganizer.Data;
+using LANOrganizer.Endpoints;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 namespace LANOrganizer
@@ -14,6 +17,11 @@ namespace LANOrganizer
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            builder.Services.AddDbContext<LanorgDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             var app = builder.Build();
 
@@ -32,7 +40,7 @@ namespace LANOrganizer
 
             app.UseAuthorization();
 
-           
+           LanorgEndpoints.RegisterEndpoints(app);
 
             app.Run();
         }
